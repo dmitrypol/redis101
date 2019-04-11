@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+
+  web1:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    volumes:
+      - .:/code
+    env_file:
+      - redis101.env      
+    ports:
+      - target: 5000
+        published: 5001
+    depends_on:
+      - redis
+
+  web2:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    volumes:
+      - .:/code
+    env_file:
+      - redis101.env      
+    ports:
+      - target: 5000
+        published: 5002
+    depends_on:
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile-worker
+    env_file:
+      - redis101.env      
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:5.0.4-alpine
+    ports:
+      - target: 6379
+        published: 6379
+    expose:
+      - 6379
+

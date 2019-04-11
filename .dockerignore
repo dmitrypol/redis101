@@ -1,0 +1,11 @@
+**/.vscode
+**/.idea
+**/.coverages
+**/.pytest_cache
+**/*.md
+**/__pycache__
+**/node_modules
+**/build
+**/.git
+**/tmp/*
+**/htmlcov/*

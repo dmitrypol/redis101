@@ -1,0 +1,9 @@
+FROM python:3.6.6-alpine
+
+RUN mkdir /code
+WORKDIR /code
+COPY Pipfile* /code/
+RUN pip install --upgrade pip && pip install pipenv && pipenv install --system
+COPY web.py common.py ./
+
+ENTRYPOINT ["python", "web.py"]
