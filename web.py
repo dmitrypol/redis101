@@ -14,7 +14,7 @@ def root():
 
 
 from werkzeug.contrib.cache import RedisCache
-CACHE = RedisCache(host=os.environ['REDIS_HOST'], port=os.environ['REDIS_PORT'], db=0, default_timeout=300)
+CACHE = RedisCache(host=os.environ['REDIS_HOST'], port=os.environ['REDIS_PORT'], db=1, default_timeout=300)
 
 
 @app.route('/nocache/<input_param>')
@@ -41,17 +41,24 @@ def _slow_method(input_param):
 #   Background job queue
 
 
-from redis import Redis
-from rq import Queue
-redis_conn = Redis(host=os.environ['REDIS_HOST'], port=os.environ['REDIS_PORT'], db=1)
-RQ = Queue(connection=redis_conn)
-from common import generate_report
+from tasks import generate_report, download_data
 
 
-@app.route('/request_report/<input_param>')
-def request_report(input_param):
-    job = RQ.enqueue(generate_report, input_param)
-    return job.id
+@app.route('/report/<input_param>')
+def report(input_param):
+    return generate_report.delay(input_param).id
+
+
+@app.route('/data/<input_param>')
+def data(input_param):
+    return download_data.delay(input_param).id
+
+
+import rq_dashboard
+rq_settings = rq_dashboard.default_settings
+rq_settings.REDIS_HOST=os.environ['REDIS_HOST']
+app.config.from_object(rq_settings)
+app.register_blueprint(rq_dashboard.blueprint, url_prefix="/rq")
 
 
 #

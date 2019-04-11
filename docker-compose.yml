@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/code
     env_file:
-      - redis101.env      
+      - redis101.env
     ports:
       - target: 5000
         published: 5001
@@ -23,7 +23,7 @@ services:
     volumes:
       - .:/code
     env_file:
-      - redis101.env      
+      - redis101.env
     ports:
       - target: 5000
         published: 5002

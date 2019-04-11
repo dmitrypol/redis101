@@ -4,6 +4,6 @@ RUN mkdir /code
 WORKDIR /code
 COPY Pipfile* /code/
 RUN pip install --upgrade pip && pip install pipenv && pipenv install --system
-COPY worker.py common.py ./
+COPY worker.py tasks.py ./
 
 ENTRYPOINT ["python", "worker.py"]
